@@ -50,16 +50,16 @@ class Eigenface:
         return svd
 
     @staticmethod
-    def recognize_face(image_path, mean_face, scale_parameter, svd):
+    def decompose_face(image_path, mean_face, scale_parameter, svd):
         image = np.asarray(Image.open(image_path))
         image_vector = rescale(image, scale_parameter, mode='reflect').flatten()
         image_vector = image_vector - mean_face  # normalize
         image_vector_hat = []
         for eigenvector in svd.components_:
-            coefficient = eigenvector.T * image_vector * eigenvector
+            coefficient = np.dot(eigenvector.transpose(), image_vector)
             image_vector_hat.append(coefficient)
         print(image_vector_hat)
-        return image_vector_hat
+        return image_path, image_vector_hat
 
 
 

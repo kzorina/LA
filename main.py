@@ -18,7 +18,7 @@ covariance_matrix = eigenface.get_covariance_matrix(face_matrix)
 # pca = eigenface.get_pca(covariance_matrix, N_COMPONENTS, SVD_SOLVER, WHITEN)
 svd = eigenface.get_svd(covariance_matrix, N_COMPONENTS)
 
-eigenface.recognize_face("yalefaces/subject01.happy", mean_face, SCALE_PARAMETER, svd)
+eigenface.decompose_face("yalefaces/subject01.happy", mean_face, SCALE_PARAMETER, svd)
 
 
 """
