@@ -6,44 +6,36 @@ import numpy as np
 from sklearn.decomposition import PCA
 from PIL import Image
 from skimage.transform import rescale
-
-# %matplotlib inline
-
-#DEFAULT_IMAGE_SIZE = 77760
-#DEFAULT_IMAGE_SIZE = 9520
-DATA_DIR = 'yalefaces'
-SCALE_PARAMETER = 0.25
-IMAGE_LIMIT = 20
-
-face_matrix = []
-for index, file in enumerate(os.listdir(DATA_DIR)):
-    image_path = os.path.join(DATA_DIR, file)
-    image = np.asarray(Image.open(image_path))
-    image = rescale(image, SCALE_PARAMETER, mode='reflect')
-    image_vector = image.flatten()
-    face_matrix.append(image_vector)
-    if index > IMAGE_LIMIT:
-        break
-
-image_shape = image.shape
-face_matrix = np.array(face_matrix)
-
-mean_face = face_matrix.mean(axis=0)
-# plt.imshow(mean_face.reshape(image_shape[0], image_shape[1]), cmap=plt.cm.gray)
-for column in face_matrix:
-    column = column.astype('float64')
-    column -= mean_face
-
-cov_face_matrix = np.dot(face_matrix.T,face_matrix)
-
-t0 = time()
-u, s, v = np.linalg.svd(cov_face_matrix)
-print("Numpy SVD done in {} seconds".format(time() - t0))
-
-t0 = time()
-pca = PCA(svd_solver="auto", whiten=True).fit(cov_face_matrix)
-print("Sklearn PCA done in {} seconds".format(time() - t0))
-print(pca.explained_variance_ratio_)
+from constants import DATA_DIR, SCALE_PARAMETER, IMAGE_LIMIT, N_COMPONENTS, SVD_SOLVER, WHITEN
+from eigenface import Eigenface
 
 
 
+eigenface = Eigenface()
+face_matrix = eigenface.read_data(DATA_DIR, SCALE_PARAMETER, IMAGE_LIMIT)
+face_matrix, mean_face = eigenface.normalize(face_matrix)
+covariance_matrix = eigenface.get_covariance_matrix(face_matrix)
+# pca = eigenface.get_pca(covariance_matrix, N_COMPONENTS, SVD_SOLVER, WHITEN)
+svd = eigenface.get_svd(covariance_matrix, N_COMPONENTS)
+
+eigenface.recognize_face("yalefaces/subject01.happy", mean_face, SCALE_PARAMETER, svd)
+
+
+"""
+Classify an image to one of the eigenfaces.
+"""
+#
+# def classify(self, path_to_img):
+#     img = cv2.imread(path_to_img, 0)  # read as a grayscale image
+#     img_col = np.array(img, dtype='float64').flatten()  # flatten the image
+#     img_col -= self.mean_img_col  # subract the mean column
+#     img_col = np.reshape(img_col, (self.mn, 1))  # from row vector to col vector
+#
+#     S = self.evectors.transpose() * img_col  # projecting the normalized probe onto the
+#     # Eigenspace, to find out the weights
+#
+#     diff = self.W - S  # finding the min ||W_j - S||
+#     norms = np.linalg.norm(diff, axis=0)
+#
+#     closest_face_id = np.argmin(norms)  # the id [0..240) of the minerror face to the sample
+#     return (closest_face_id / self.train_faces_count) + 1
