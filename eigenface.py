@@ -54,7 +54,7 @@ class Eigenface:
 
     @staticmethod
     def decompose_face(image_path, mean_face, scale_parameter, svd):
-        image = np.asarray(Image.open(image_path))
+        image = np.asarray(Image.open(image_path)).astype('float64')
         image_vector = rescale(image, scale_parameter, mode='reflect').flatten()
         image_vector = image_vector - mean_face  # normalize
         image_weights = []

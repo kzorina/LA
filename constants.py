@@ -1,5 +1,5 @@
 DATA_DIR = "yalefaces"
-TRAIN_DIR = "yalefaces"
+TRAIN_DIR = "train"
 TEST_DIR = "test"
 SCALE_PARAMETER = 0.25
 N_COMPONENTS = 10
