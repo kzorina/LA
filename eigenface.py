@@ -104,7 +104,9 @@ class Eigenface:
                 # plt.title("Match\ndistance: {}".format(distance))
                 #
                 # plt.show()
-                return filepath.split('/')[1].split('.')[0] == image_path.split('/')[1].split('.')[0]
+                # TODO: fix this awful check for the same person
+                return filepath.split('/')[1].replace(".", "_").split('_')[0] == \
+                       image_path.split('/')[1].replace(".", "_").split('_')[0]
 
 
     def recognize_test_images(self, test_dir, mean_face, scale_parameter, svd, known_images, standard_size):

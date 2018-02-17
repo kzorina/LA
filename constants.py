@@ -1,6 +1,6 @@
 DATA_DIR = "yalefaces"
-TRAIN_DIR = "train"
-TEST_DIR = "test"
+TRAIN_DIR = "train_{}".format(DATA_DIR)
+TEST_DIR = "test_{}".format(DATA_DIR)
 SCALE_PARAMETER = 0.25
 STANDARD_SIZE = (243, 320)
 N_COMPONENTS = 20
