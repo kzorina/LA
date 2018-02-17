@@ -2,6 +2,7 @@ DATA_DIR = "yalefaces"
 TRAIN_DIR = "train"
 TEST_DIR = "test"
 SCALE_PARAMETER = 0.25
+STANDARD_SIZE = (243, 320)
 N_COMPONENTS = 10
 SVD_SOLVER = "auto"
 WHITEN = True

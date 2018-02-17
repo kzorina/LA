@@ -1,11 +1,13 @@
 import os
 from time import time
-
+from constants import *
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 from skimage.transform import rescale
 from sklearn.decomposition import PCA, TruncatedSVD
+
+from image_processor import *
 
 
 class Eigenface:
@@ -41,6 +43,7 @@ class Eigenface:
                   svd_solver=svd_solver,
                   whiten=whiten).fit(covariance_matrix)
         print("Sklearn PCA done in {} seconds".format(time() - t0))
+        plt.show()
         return pca
 
     @staticmethod
@@ -53,26 +56,29 @@ class Eigenface:
         return svd
 
     @staticmethod
-    def decompose_face(image_path, mean_face, scale_parameter, svd):
-        image = np.asarray(Image.open(image_path)).astype('float64')
+    def decompose_face(image_path, mean_face, scale_parameter, svd, standard_size):
+        image = Image.open(image_path)
+        if np.asarray(image).shape != standard_size:
+            image, image_path = process_image(image, image_path, standard_size)
+        image = np.asarray(image).astype('float64')
         image_vector = rescale(image, scale_parameter, mode='reflect').flatten()
         image_vector = image_vector - mean_face  # normalize
         image_weights = []
         for eigenvector in svd.components_:
             coefficient = np.dot(eigenvector.transpose(), image_vector)
             image_weights.append(coefficient)
-        return image_weights
+        return image_weights, image_path
 
-    def train_model(self, train_dir, mean_face, scale_parameter, svd):
+    def train_model(self, train_dir, mean_face, scale_parameter, svd, standard_size):
         decomposed_images = {}
         for file in os.listdir(train_dir):
             image_path = os.path.join(train_dir, file)
-            image_weights = self.decompose_face(image_path, mean_face, scale_parameter, svd)
+            image_weights, image_path = self.decompose_face(image_path, mean_face, scale_parameter, svd, standard_size)
             decomposed_images[image_path] = image_weights
         return decomposed_images
 
-    def recognise_image(self, known_images, image_path, mean_face, scale_parameter, svd):
-        image_weights = self.decompose_face(image_path, mean_face, scale_parameter, svd)
+    def recognise_image(self, known_images, image_path, mean_face, scale_parameter, svd, standard_size):
+        image_weights, image_path = self.decompose_face(image_path, mean_face, scale_parameter, svd, standard_size)
 
         distances = {}
         for filepath, weights in known_images.items():
@@ -100,7 +106,7 @@ class Eigenface:
                 plt.show()
                 break
 
-    def recognize_test_images(self, known_images, mean_face, scale_parameter, svd, test_dir):
+    def recognize_test_images(self, known_images, mean_face, scale_parameter, svd, test_dir, standard_size):
         for file in os.listdir(test_dir):
             image_path = os.path.join(test_dir, file)
-            self.recognise_image(known_images, image_path, mean_face, scale_parameter, svd)
+            self.recognise_image(known_images, image_path, mean_face, scale_parameter, svd, standard_size)
