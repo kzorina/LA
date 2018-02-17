@@ -1,6 +1,6 @@
 import os
 from time import time
-from constants import *
+
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
@@ -9,15 +9,16 @@ from sklearn.decomposition import PCA, TruncatedSVD
 
 from image_processor import *
 
-
 class Eigenface:
     @staticmethod
-    def normalize(face_matrix):
-        mean_face = face_matrix.mean(axis=0)
+    def get_mean(face_matrix):
+        return face_matrix.mean(axis=0)
+
+    @staticmethod
+    def normalize(face_matrix, mean_face):
         for column in face_matrix:
             column = column.astype('float64')
             column -= mean_face
-        return face_matrix, mean_face
 
     @staticmethod
     def read_data(file_path, scale_parameter):
@@ -43,7 +44,6 @@ class Eigenface:
                   svd_solver=svd_solver,
                   whiten=whiten).fit(covariance_matrix)
         print("Sklearn PCA done in {} seconds".format(time() - t0))
-        plt.show()
         return pca
 
     @staticmethod
@@ -96,17 +96,17 @@ class Eigenface:
                 shape = image_match.shape
 
                 plt.subplot(1, 2, 1)
-                plt.imshow(image_match.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
+                plt.imshow(image_input.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
                 plt.title("Input")
 
                 plt.subplot(1, 2, 2)
-                plt.imshow(image_input.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
-                plt.title("Match")
+                plt.imshow(image_match.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
+                plt.title("Match\ndistance: {}".format(distance))
 
                 plt.show()
                 break
 
-    def recognize_test_images(self, known_images, mean_face, scale_parameter, svd, test_dir, standard_size):
+    def recognize_test_images(self, test_dir, mean_face, scale_parameter, svd, known_images, standard_size):
         for file in os.listdir(test_dir):
             image_path = os.path.join(test_dir, file)
             self.recognise_image(known_images, image_path, mean_face, scale_parameter, svd, standard_size)
