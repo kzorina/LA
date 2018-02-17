@@ -9,5 +9,6 @@ WHITEN = True
 IMAGE_FEATURES = ["centerlight", "glasses", "happy", "leftlight", "noglasses", "normal",
                   "rightlight", "sad", "sleepy", "surprised", "wink"]
 GENERIC_IMAGENAME = "subject{number}.{feature}"
-
 N_OF_EVCS_TO_DROP = 1
+N_OF_FOLDS = 5
+NUMBER_OF_PEOPLE = 15

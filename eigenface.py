@@ -91,22 +91,26 @@ class Eigenface:
         min_distance = min(distances.values())
         for filepath, distance in distances.items():
             if np.isclose(distance, min_distance):
-                image_match = np.asarray(Image.open(filepath))
-                image_input = np.asarray(Image.open(image_path))
-                shape = image_match.shape
+                # image_match = np.asarray(Image.open(filepath))
+                # image_input = np.asarray(Image.open(image_path))
+                # shape = image_match.shape
+                #
+                # plt.subplot(1, 2, 1)
+                # plt.imshow(image_input.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
+                # plt.title("Input")
+                #
+                # plt.subplot(1, 2, 2)
+                # plt.imshow(image_match.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
+                # plt.title("Match\ndistance: {}".format(distance))
+                #
+                # plt.show()
+                return filepath.split('/')[1].split('.')[0] == image_path.split('/')[1].split('.')[0]
 
-                plt.subplot(1, 2, 1)
-                plt.imshow(image_input.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
-                plt.title("Input")
-
-                plt.subplot(1, 2, 2)
-                plt.imshow(image_match.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
-                plt.title("Match\ndistance: {}".format(distance))
-
-                plt.show()
-                break
 
     def recognize_test_images(self, test_dir, mean_face, scale_parameter, svd, known_images, standard_size):
+        result = []
         for file in os.listdir(test_dir):
             image_path = os.path.join(test_dir, file)
-            self.recognise_image(known_images, image_path, mean_face, scale_parameter, svd, standard_size)
+            match = self.recognise_image(known_images, image_path, mean_face, scale_parameter, svd, standard_size)
+            result.append(match)
+        return result
