@@ -1,5 +1,3 @@
-import os
-
 from constants import *
 from eigenface import Eigenface
 

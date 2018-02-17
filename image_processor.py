@@ -1,8 +1,8 @@
 import os
+
+import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
-import matplotlib.pyplot as plt
-
 
 STANDARD_SIZE = [243,320]
 DATA_INPUT = 'train_process'
