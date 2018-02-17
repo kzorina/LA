@@ -44,5 +44,5 @@ def process_image(image, image_path, standard_size):
     image_to_save = Image.fromarray(image.astype(np.uint8))
     image_to_save.save(new_path)
     os.remove(image_path)
-    return image, new_path
+    return image, new_pathgit
 
