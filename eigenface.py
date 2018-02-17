@@ -10,12 +10,14 @@ from sklearn.decomposition import PCA, TruncatedSVD
 
 class Eigenface:
     @staticmethod
-    def normalize(face_matrix):
-        mean_face = face_matrix.mean(axis=0)
+    def get_mean(face_matrix):
+        return face_matrix.mean(axis=0)
+
+    @staticmethod
+    def normalize(face_matrix, mean_face):
         for column in face_matrix:
             column = column.astype('float64')
             column -= mean_face
-        return face_matrix, mean_face
 
     @staticmethod
     def read_data(file_path, scale_parameter):
@@ -90,12 +92,12 @@ class Eigenface:
                 shape = image_match.shape
 
                 plt.subplot(1, 2, 1)
-                plt.imshow(image_match.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
+                plt.imshow(image_input.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
                 plt.title("Input")
 
                 plt.subplot(1, 2, 2)
-                plt.imshow(image_input.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
-                plt.title("Match")
+                plt.imshow(image_match.reshape(shape[0], shape[1]), cmap=plt.cm.gray)
+                plt.title("Match\ndistance: {}".format(distance))
 
                 plt.show()
                 break
