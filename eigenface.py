@@ -102,7 +102,7 @@ class Eigenface:
                 plt.show()
                 break
 
-    def recognize_test_images(self, known_images, mean_face, scale_parameter, svd, test_dir):
+    def recognize_test_images(self, test_dir, mean_face, scale_parameter, svd, known_images):
         for file in os.listdir(test_dir):
             image_path = os.path.join(test_dir, file)
             self.recognise_image(known_images, image_path, mean_face, scale_parameter, svd)

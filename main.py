@@ -12,5 +12,5 @@ svd = eigenface.get_svd(covariance_matrix, N_COMPONENTS)
 svd.components_ = svd.components_[N_OF_EVCS_TO_DROP:]
 
 decomposed_images = eigenface.train_model(TRAIN_DIR, mean_face, SCALE_PARAMETER, svd)
+eigenface.recognize_test_images(TEST_DIR, mean_face, SCALE_PARAMETER, svd, decomposed_images)
 
-eigenface.recognize_test_images(decomposed_images, mean_face, SCALE_PARAMETER, svd, TEST_DIR)
