@@ -1,7 +1,7 @@
 DATA_DIR = "att_faces"
 TRAIN_DIR = "train_{}".format(DATA_DIR)
 TEST_DIR = "test_{}".format(DATA_DIR)
-SCALE_PARAMETER = 0.5
+SCALE_PARAMETER = 1
 STANDARD_SIZE = (112, 92)
 N_COMPONENTS = 20
 SVD_SOLVER = "auto"
